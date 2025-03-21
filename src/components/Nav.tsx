@@ -7,26 +7,26 @@ const Nav = () => {
     <nav style={{ margin: 0 }}>
       <ul className='nav nav-tabs'>
         <li className='nav-item'>
-          <h2 style={{ textAlign: 'left', margin: 0 }}>
+          <h1 style={{ textAlign: 'left', margin: 0 }}>
             <Link
               to='/'
               className={currentPage === '/' ? 'nav-link active' : 'nav-link'}
             >
               Home
             </Link>
-          </h2>
+          </h1>
         </li>
         <li className='nav-item'>
-          <h2 style={{ textAlign: 'left', margin: 0 }}>
+          <h1 style={{ textAlign: 'left', margin: 0 }}>
             <Link
-              to='/WatchList'
+              to='/SavedCandidates'
               className={
-                currentPage === '/CandidateList' ? 'nav-link active' : 'nav-link'
+                currentPage === '/SavedCandidates' ? 'nav-link active' : 'nav-link'
               }
             >
               Potential Candidate
             </Link>
-          </h2>
+          </h1>
         </li>
       </ul>
     </nav>

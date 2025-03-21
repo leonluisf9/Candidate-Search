@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { searchGithubUser } from '../api/API';
-import CandidateCard from '../components/Candidate.Card';
+import { useState, useEffect } from 'react';
+import { searchGithub, searchGithubUser } from '../api/API';
 import type Candidate from '../interfaces/Candidate.interface';
+import { IoAddCircle } from 'react-icons/io5';
+import { FaMinusCircle } from 'react-icons/fa';
 
 const CandidateSearch = () => {
   const [currentCandidate, setCurrentCandidate] = useState<Candidate>({
@@ -12,50 +13,93 @@ const CandidateSearch = () => {
     company: '',
     bio: '',
     avatar_url: '',
+    html_url: '',
   });
 
-  const [searchInput, setSearchInput] = useState<string>('');
+  const [load, setLoad] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const addToCandidateList = () => {
-    let parsedCandidatesToWatch: Candidate[] = [];
-    const storedCandidatesToWatch = localStorage.getItem('candidatesToWatch');
-    if (typeof storedCandidatesToWatch === 'string') {
-      parsedCandidatesToWatch = JSON.parse(storedCandidatesToWatch);
+  const searchForCandidate = async () => {
+    setLoad(true);
+    setError(null);
+    try {
+      const candidates = await searchGithub();
+      if (candidates.length > 0){
+        const candidateData = await searchGithubUser(candidates[0].login);
+        setCurrentCandidate(candidateData);
+      } else {
+        setCurrentCandidate({
+          id: '',
+          login: '',
+          location: '',
+          email: '',
+          company: '',
+          bio: '',
+          avatar_url: '',
+          html_url: '',
+        });
+      }
+      } catch (err) {
+        setError('Failed searching candidate data.');
+      } finally {
+        setLoad(false);
+      }
+  };
+
+  const saveCandidate = () => {
+    if (currentCandidate) {
+      const storeCandidates = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
+      localStorage.setItem('savedCandidates', JSON.stringify([...storeCandidates, currentCandidate]));
+      searchForCandidate();
     }
-    parsedCandidatesToWatch.push(currentCandidate);
-    localStorage.setItem('candidateToWatch', JSON.stringify(parsedCandidatesToWatch));
   };
 
-  const searchForCandidateByusername = async (event: React.FormEvent<HTMLFormElement>, Candidate_username:string) => {
-    event.preventDefault();
-    const data: Candidate = await searchGithubUser(Candidate_username);
-    setCurrentCandidate(data);
+  const rejectCandidate = () => {
+    searchForCandidate();
   };
+
+  useEffect(() => {
+    searchForCandidate();
+  }, []);
+
+  if (load) return <h1>Loading...</h1>;
+  if (error) return <h1>{error}</h1>;
+  if (!currentCandidate) return <h1>There are no additional candidates for review!</h1>;
 
   return (
-    <>
-      <h1>CandidateSearch</h1>
-      <section id='searchSection'>
-        <form
-          onSubmit={(event) => searchForCandidateByusername(event, searchInput)}
-        >
-          <input
-            type='text'
-            name=''
-            id=''
-            placeholder='Enter a Candidate'
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <button type='submit' name='searchBtn'>
-            Search
-          </button>
-        </form>
-      </section>
-      <CandidateCard
-        currentCandidate={currentCandidate}
-        addToCandidateList={addToCandidateList}
+    <div>
+    <h1>Candidate Search</h1>
+    <div>
+      <img src={currentCandidate.avatar_url} alt={currentCandidate.login} style={{ width: '150px' }} />
+      <h2>{currentCandidate.name || 'Anonymous'} ({currentCandidate.login})</h2>
+      {currentCandidate.location && <p>Location: {currentCandidate.location}</p>}
+      {currentCandidate.email && <p>Email: {currentCandidate.email}</p>}
+      {currentCandidate.company && <p>Company: {currentCandidate.company}</p>}
+      {currentCandidate.bio && <p>Company: {currentCandidate.bio}</p>}
+      <a href={currentCandidate.html_url} target="_blank" rel="noopener noreferrer">GitHub Profile</a>
+      <div>
+      <FaMinusCircle 
+         style={{ 
+         fontSize: '70px', 
+         color: 'red', 
+         }} 
+         onClick={() => {
+         rejectCandidate();
+         }}
       />
-    </>
+      <IoAddCircle 
+         style={{ 
+         fontSize: '80px', 
+         color: 'green', 
+         marginRight: '1rem'
+        }} 
+        onClick={() => {
+          saveCandidate();
+        }}
+      />
+      </div>
+    </div>
+  </div> 
   );
 };
 
