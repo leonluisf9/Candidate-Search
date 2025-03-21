@@ -5,7 +5,7 @@
 2. [Installation](#installation)
 3. [Usage](#usage)
 4. [Contributing](#contributing)
-5. [Video](#video)
+5. [Screenshot](#screenshot)
 6. [License](#license)
 7. [Questions](#questions)
 
@@ -17,8 +17,8 @@ Deployed application: https://tobedone.github.io/searchapplication/
 Application fetch data using a GitHub API, users can review list of potential candidates, save preferred ones, and discard others. Selected candidates are stored locally and can be reviewed on a candidate page.
 ## Contributing
 Please contribute. If you have a suggestion that would make this better, please fork the repo and create a pull request
-## Video
-There is no available video to demonstrate app functionality.
+## Screenshot
+![image](https://github.com/user-attachments/assets/429f8d23-e8ea-4770-95c2-2440d86acbc9)
 ## License
 Please visit http://choosealicense.com/licenses/mit/ to get information for this license
 ## Questions
