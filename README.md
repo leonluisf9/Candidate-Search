@@ -12,7 +12,7 @@
 ## Description
 Candidate search application built with React and Typescript that calls the GitHub API and renders data in the browser.
 ## Installation
-Deployed application: https://tobedone.github.io/searchapplication/
+Deployed application: [https://tobedone.github.io/searchapplication/](https://candidate-search-st.onrender.com)
 ## Usage
 Application fetch data using a GitHub API, users can review list of potential candidates, save preferred ones, and discard others. Selected candidates are stored locally and can be reviewed on a candidate page.
 ## Contributing
